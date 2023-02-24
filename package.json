@@ -6,9 +6,7 @@
     "dev": "next dev -p 7001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma generate",
-    "stripe:webhook": "stripe listen --forward-to http://localhost:7001/api/webhook/stripe"
+    "lint": "next lint"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.10",
