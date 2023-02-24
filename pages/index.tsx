@@ -1,5 +1,13 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { Button, Center, Heading, Input, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Heading,
+  Input,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { Configuration, OpenAIApi } from "openai";
 import { useState } from "react";
@@ -7,10 +15,14 @@ import { useState } from "react";
 console.log(process.env.NEXT_PUBLIC_OPENAI_API_KEY);
 
 const Order = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const [email, setEmail] = useState("");
   const [snippets, setSnippets] = useState({});
   const [results, setResults] = useState("");
+
   const handleDescribeLead = async () => {
+    setLoading(true);
     const configuration = new Configuration({
       apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     });
@@ -231,6 +243,7 @@ const Order = () => {
     });
 
     setResults(completion.data.choices[0].text || "No results");
+    setLoading(false);
   };
 
   return (
@@ -248,11 +261,7 @@ const Order = () => {
           }}
         />
 
-        {!results ? (
-          <Text>{JSON.stringify(snippets)}</Text>
-        ) : (
-          <Text>{results}</Text>
-        )}
+        {loading ? <Spinner /> : <Text>{results}</Text>}
 
         {/* <DisplayValue label="Indica (x1)" value="11" />
           <Divider />
