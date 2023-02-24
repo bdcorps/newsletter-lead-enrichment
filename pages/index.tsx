@@ -12,21 +12,26 @@ import axios from "axios";
 import { Configuration, OpenAIApi } from "openai";
 import { useState } from "react";
 
-console.log(process.env.NEXT_PUBLIC_OPENAI_API_KEY);
-
 const Order = () => {
+  console.log(process.env);
   const [loading, setLoading] = useState<boolean>(false);
 
   const [email, setEmail] = useState("");
   const [snippets, setSnippets] = useState({});
   const [results, setResults] = useState("");
 
+  const configuration = new Configuration({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+
+  
   const handleDescribeLead = async () => {
+    if (!email) {
+      alert("No email provided");
+      return;
+    }
     setLoading(true);
-    const configuration = new Configuration({
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-    });
-    const openai = new OpenAIApi(configuration);
 
     // https://api.serpdog.io/search?api_key=APIKEY&q=coffee&gl=us
 
