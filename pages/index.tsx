@@ -4,20 +4,22 @@ import axios from "axios";
 import { Configuration, OpenAIApi } from "openai";
 import { useState } from "react";
 
+console.log(process.env.NEXT_PUBLIC_OPENAI_API_KEY);
+
 const Order = () => {
   const [email, setEmail] = useState("");
   const [snippets, setSnippets] = useState({});
   const [results, setResults] = useState("");
   const handleDescribeLead = async () => {
     const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     });
     const openai = new OpenAIApi(configuration);
 
     // https://api.serpdog.io/search?api_key=APIKEY&q=coffee&gl=us
 
     const serpRes = await axios.get(
-      `https://api.serpdog.io/search?api_key=${process.env.SERPDOG_API_KEY}&q=${email}&gl=us`
+      `https://api.serpdog.io/search?api_key=${process.env.NEXT_PUBLIC_SERPDOG_API_KEY}&q=${email}&gl=us`
     );
     const serpData = serpRes.data;
 
