@@ -4,6 +4,7 @@ import {
   Center,
   Heading,
   Input,
+  Link,
   Spinner,
   Text,
   VStack,
@@ -13,7 +14,6 @@ import { Configuration, OpenAIApi } from "openai";
 import { useState } from "react";
 
 const Order = () => {
-  console.log(process.env);
   const [loading, setLoading] = useState<boolean>(false);
 
   const [email, setEmail] = useState("");
@@ -25,7 +25,6 @@ const Order = () => {
   });
   const openai = new OpenAIApi(configuration);
 
-  
   const handleDescribeLead = async () => {
     if (!email) {
       alert("No email provided");
@@ -244,7 +243,7 @@ const Order = () => {
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
-      prompt: `This is the search history of "${email}". Can you describe this person? "${allSnippets}"`,
+      prompt: `This is the search history of "${email}". Can you describe this person? Only answer if there is a cohesive theme across the results. Add a confidence value at the end of the answer. "${allSnippets}"`,
     });
 
     setResults(completion.data.choices[0].text || "No results");
@@ -258,7 +257,7 @@ const Order = () => {
         <Text color="gray.500">Know who is reading your newsletter</Text>
 
         <Input
-          key="password"
+          key="email"
           placeholder="Enter an email address"
           defaultValue={email}
           onChange={(evt) => {
@@ -274,6 +273,13 @@ const Order = () => {
         <Button onClick={handleDescribeLead} rightIcon={<ArrowForwardIcon />}>
           Go
         </Button>
+        <Text color="gray.500" textAlign="center">
+          Results are not stored
+        </Text>
+
+        <Link href="https://twitter.com/thisissukh_" textAlign="center">
+          Built by Sukh
+        </Link>
       </VStack>
     </Center>
   );
