@@ -251,7 +251,7 @@ const Order = () => {
   };
 
   return (
-    <Center h="100vh">
+    <Center h="100vh" p={4}>
       <VStack spacing={4} w={500} align="left">
         <Heading>Newsletter Lead Enrichment</Heading>
         <Text color="gray.500">Know who is reading your newsletter</Text>
