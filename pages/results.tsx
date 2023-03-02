@@ -2,8 +2,10 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   Container,
   Heading,
+  HStack,
   Input,
   StackDivider,
   Text,
@@ -19,6 +21,7 @@ interface ResultsProps {}
 const Results: FunctionComponent<ResultsProps> = () => {
   const [results, setResults] = useState([]);
   const [email, setEmail] = useState("");
+  const [showEmails, setShowEmails] = useState(true);
 
   // const email = "sunnyashiin@gmail.com";
 
@@ -52,9 +55,22 @@ const Results: FunctionComponent<ResultsProps> = () => {
               </>
             ) : (
               <>
-                <CSVLink data={results}>
-                  <Button colorScheme="brand" size="sm">Download as CSV</Button>
-                </CSVLink>
+                <HStack justify="space-between" w="full">
+                  <CSVLink data={results}>
+                    <Button colorScheme="brand" size="sm">
+                      Download as CSV
+                    </Button>
+                  </CSVLink>
+                  <Checkbox
+                    isChecked={showEmails}
+                    onChange={(evt: any) => {
+                      setShowEmails(evt.target.checked);
+                    }}
+                  >
+                    Show emails
+                  </Checkbox>
+                </HStack>
+
                 <VStack
                   divider={<StackDivider borderColor="gray.200" />}
                   spacing={4}
@@ -64,7 +80,11 @@ const Results: FunctionComponent<ResultsProps> = () => {
                   {results.map((result: any, i: number) => {
                     return (
                       <Box key={`res_${i}`} textAlign="left">
-                        <Text fontWeight={500}>{result.email}</Text>
+                        {showEmails ? (
+                          <Text fontWeight={500}>{result.email}</Text>
+                        ) : (
+                          <Text fontWeight={500}>xxx@email.com</Text>
+                        )}
                         <Text color="gray.600">{result.bio}</Text>
                       </Box>
                     );
