@@ -3,9 +3,12 @@ import {
   Box,
   Button,
   Center,
+  chakra,
   Container,
   Heading,
+  HStack,
   Input,
+  shouldForwardProp,
   SimpleGrid,
   Spinner,
   StackDivider,
@@ -14,6 +17,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { isValidMotionProp, motion } from "framer-motion";
+import { useRouter } from "next/router";
 import { FunctionComponent, useState } from "react";
 import Layout from "../components/Landing/LandingLayout";
 
@@ -31,8 +36,8 @@ const faqs = [
     a: "This depends on the quality of public data available on the individual.If they don't have much, the results will be lofty. We're working on improving the accuracy soon.",
   },
   {
-    q: "How do you collect the data?",
-    a: "It's all public data on the person that we collect using their email address.",
+    q: "How does this work?",
+    a: "We gather public data on an individual and summarize it using AI.",
   },
   {
     q: "Can I remove my email from this database?",
@@ -44,6 +49,11 @@ const faqs = [
     a: "Yep, no problem. Let us know and we'll refund you at sukh[at]launchman.com",
   },
 ];
+
+const ChakraBox = chakra(motion.div, {
+  shouldForwardProp: (prop) =>
+    isValidMotionProp(prop) || shouldForwardProp(prop),
+});
 
 const FAQSection = ({ items }: any) => {
   return (
@@ -178,7 +188,7 @@ const Demo: FunctionComponent<DemoProps> = () => {
           <Textarea
             h={200}
             key="email"
-            placeholder="sunnyashiin@gmail.com, sukh@launchman.com"
+            placeholder="sunny@gmail.com, elon@tesla.com"
             defaultValue=""
             onChange={(evt: any) => {
               setEmailTokens(evt.target.value.split(","));
@@ -188,7 +198,7 @@ const Demo: FunctionComponent<DemoProps> = () => {
 
         <Box w="full">
           <Text textAlign="left" fontWeight={600}>
-            Enter email to send results to (Should be ready in ~4 mins)
+            Enter your real email
           </Text>
 
           <Input
@@ -225,6 +235,18 @@ const Demo: FunctionComponent<DemoProps> = () => {
 };
 
 const Order = () => {
+  const heroResults = [
+    {
+      email: "sukhxxx@gmail.com",
+      bio: "Sukh is an experienced software engineer and freelance consultant. With a passion for coding, she specializes in building and maintaining software products. She is experienced in SaaS development and regularly contributes to open-source projects. She is knowledgeable in SMTP authentication, and is familiar with code review processes. Sunnyashiin is also well-versed in AI-driven technologies and has created a FB Ad Generator using AI.",
+    },
+    {
+      email: "sunilxxx@plainenglish.io",
+      bio: "Sunil Sandhu is the founder and CEO of PlainEnglish.io, a company focused on helping people become better writers and content creators. He is an expert in programming and web scraping, and is a well-known figure on social media. Sunil is passionate about creating content that is both informative and entertaining. He is active on Twitter, LinkedIn, and Medium, and his writing has been featured in top publications such as Livecycle, Bright Data, and Venture. Sunil is also a member of the Writer's Community, a Discord group he founded to bring together like-minded writers. Sunil's commitment to helping others become better writers is evident in his work and his passion for the craft. He is sure to be a leader in the industry for years to come.",
+    },
+  ];
+
+  const router = useRouter();
   return (
     <Layout>
       <Box
@@ -234,38 +256,72 @@ const Order = () => {
       >
         <Container maxW="container.lg" h="80vh">
           <Center p={4} h="full">
-            <VStack spacing={4} w={500} textAlign="center">
-              <Heading>Learn who is reading your newsletters</Heading>
-              <Text color="gray.600">
-                Enrich your subscriber data and learn more about your readers -
-                where they are from, what they do, what they like, what they are
-                interested in.
-              </Text>
+            <HStack spacing={10}>
+              <VStack spacing={4} w={500} textAlign="center">
+                <Heading>Learn who is reading your newsletters</Heading>
+                <Text color="gray.600">
+                  Enrich your subscriber data and learn more about your readers
+                  - where they are from, what they do, what they like, what they
+                  are interested in.
+                </Text>
 
-              <Button
-                colorScheme="brand"
-                w="full"
-                onClick={() => {
-                  window.open("https://buy.stripe.com/fZe7wi3yfgDMfqo9AR");
-                }}
-              >
-                Get started for $20 (100 emails)
-              </Button>
+                <Button
+                  colorScheme="brand"
+                  w="full"
+                  onClick={() => {
+                    router.push("#try-it-out");
+                  }}
+                >
+                  Get started for $20 (100 emails)
+                </Button>
+              </VStack>
 
-              {/* <Text>
-            Know the composition of the readers. Something like - 10% are
-            Software Eng, 20% are artists etc.
-          </Text>
-          <Text>
-            To personally reach out to subscribers that are a bit more VIP (i.e.
-            if Ryan Hoover subscribes you prob wanna reach out).
-          </Text> */}
-            </VStack>
+              <VStack w="full" flex={1}>
+                <VStack overflow="scroll" w="full" h="full" spacing={6}>
+                  {heroResults.map((result: any, i: number) => {
+                    return (
+                      <ChakraBox
+                        key={`res_${i}`}
+                        initial={{ x: 0, opacity: 0 }}
+                        animate={{
+                          opacity: [0, 1],
+                        }}
+                        // @ts-ignore no problem in operation, although type error appears.
+                        transition={{
+                          duration: 0.8,
+                        }}
+                      >
+                        <Box
+                          key={`hero_${i}`}
+                          p={3}
+                          backgroundColor="brand.400"
+                          rounded="md"
+                          boxShadow="base"
+                          color="white"
+                        >
+                          <Text textAlign="left" fontWeight={500}>
+                            {result.email}
+                          </Text>
+                          <Text
+                            textAlign="left"
+                            // color="gray.600"
+                            fontSize="sm"
+                            noOfLines={4}
+                          >
+                            {result.bio}
+                          </Text>
+                        </Box>
+                      </ChakraBox>
+                    );
+                  })}
+                </VStack>
+              </VStack>
+            </HStack>
           </Center>
         </Container>
       </Box>
 
-      <Container maxW="container.lg">
+      <Container maxW="container.lg" id="try-it-out">
         <Box p={[4, 10]}>
           <VStack spacing={6}>
             <Heading as="h2">Try it out (Free for first 3)</Heading>
