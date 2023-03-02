@@ -74,7 +74,7 @@ const MobileSidebar = ({ name }: any) => {
     <>
       <Flex w="full" align="center">
         <HStack spacing={4}>
-          <Image src="/new_logo_1.svg" alt="Logo" w={8}></Image>
+          <Image src="/logo.svg" alt="Logo" w={8}></Image>
           <Heading fontSize="xl">{name}</Heading>
         </HStack>
         <Spacer />

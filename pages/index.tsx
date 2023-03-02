@@ -67,7 +67,6 @@ interface DemoProps {}
 const Demo: FunctionComponent<DemoProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [email, setEmail] = useState("");
   const [ownerEmail, setOwnerEmail] = useState("");
   const [emailTokens, setEmailTokens] = useState([]);
   const [snippets, setSnippets] = useState({});
@@ -159,9 +158,8 @@ const Demo: FunctionComponent<DemoProps> = () => {
             h={200}
             key="email"
             placeholder="sunnyashiin@gmail.com, sukh@launchman.com"
-            defaultValue={email}
+            defaultValue=""
             onChange={(evt: any) => {
-              setEmail(evt.target.value);
               setEmailTokens(evt.target.value.split(","));
             }}
           />
@@ -172,7 +170,13 @@ const Demo: FunctionComponent<DemoProps> = () => {
             Enter email to send results to (Should be ready in ~4 mins)
           </Text>
 
-          <Input placeholder="myemail@gmail.com"></Input>
+          <Input
+            placeholder="myemail@gmail.com"
+            type="email"
+            onChange={(evt: any) => {
+              setOwnerEmail(evt.target.value);
+            }}
+          ></Input>
         </Box>
         <Button
           onClick={() => {
@@ -182,7 +186,7 @@ const Demo: FunctionComponent<DemoProps> = () => {
           rightIcon={<ArrowForwardIcon />}
           width="full"
           colorScheme="brand"
-          isDisabled={emailTokens.length === 0}
+          isDisabled={emailTokens.length === 0 || !ownerEmail}
         >
           Go
         </Button>
