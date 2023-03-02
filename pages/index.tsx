@@ -69,27 +69,48 @@ const Demo: FunctionComponent<DemoProps> = () => {
 
   const [ownerEmail, setOwnerEmail] = useState("");
   const [emailTokens, setEmailTokens] = useState([]);
-  const [snippets, setSnippets] = useState({});
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<any[]>([]);
 
-  const [step, setStep] = useState(0);
+  const [currentlyProcessing, setCurrentlyProcessing] = useState(1);
 
   const getSampleResults = async () => {
+    axios
+      .post("/api/notify", {
+        notes: `${ownerEmail} asked for ${JSON.stringify(emailTokens)}`,
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     setLoading(true);
 
-    const sampleResults = await axios.post("/api/search", {
-      emails: emailTokens,
-      ownerEmail,
-    });
+    for (const [i, email] of Object.entries(emailTokens)) {
+      const index: number = Number(i);
+      setCurrentlyProcessing(index + 1);
+      const res: any = await axios
+        .post("/api/search", {
+          email,
+          ownerEmail,
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-    setResults(sampleResults.data);
+      if (index < 3) {
+        setResults((prevResults: any[]) => [...prevResults, res.data]);
+      }
+    }
+
     setLoading(false);
   };
 
   if (loading) {
     return (
       <Center h="full">
-        <Spinner />
+        <VStack w="full">
+          <Spinner />
+          <Text>{`Processing ${currentlyProcessing}/${emailTokens.length}`}</Text>
+        </VStack>
       </Center>
     );
   }
@@ -98,7 +119,7 @@ const Demo: FunctionComponent<DemoProps> = () => {
     return (
       <VStack align="flex-start" spacing={10}>
         <Text fontSize="2xl">
-          Total Results ({`${results.length}/${emailTokens.length}`})
+          Showing ({`${results.length} of ${emailTokens.length}`}) results
         </Text>
         <VStack
           divider={<StackDivider borderColor="gray.200" />}
@@ -127,7 +148,7 @@ const Demo: FunctionComponent<DemoProps> = () => {
           >
             <VStack spacing={2}>
               <Text fontSize="2xl" fontWeight={700} textAlign="center">
-                {`Unlock insights for all ${results.length} of your subscribers for $20`}
+                {`Unlock insights for all ${emailTokens.length} of your subscribers for $20`}
               </Text>
               <Text>
                 Results will be emailed directly to your email address as a CSV
@@ -180,7 +201,6 @@ const Demo: FunctionComponent<DemoProps> = () => {
         </Box>
         <Button
           onClick={() => {
-            setStep(1);
             getSampleResults();
           }}
           rightIcon={<ArrowForwardIcon />}

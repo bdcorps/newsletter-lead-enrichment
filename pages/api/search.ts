@@ -10,11 +10,8 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export default async function (req: NextApiRequest, res: NextApiResponse<any>) {
-
-  const results = []
-
   if (req.method === 'POST') {
-    const { emails } = req.body
+    const email = req.body.email;
 
     const ownerEmail = String(req.body.ownerEmail)
 
@@ -24,27 +21,24 @@ export default async function (req: NextApiRequest, res: NextApiResponse<any>) {
       },
       update: {},
       create: {
-        email: ownerEmail
+        email: ownerEmail,
       },
     })
 
-    for (const email of emails) {
-      const serpData = await getSerpDataForEmail(email);
-      const bio = await generateOpenAISummaryFromEmail(email, serpData);
-      console.log(bio);
-      results.push({ email, bio })
-    }
+    const serpData = await getSerpDataForEmail(email);
+    const bio = await generateOpenAISummaryFromEmail(email, serpData);
 
-    await prisma.lead.createMany({
-      data: results.map((result) => ({
-        email: result.email,
-        bio: result.bio,
+    const result = await prisma.lead.create({
+      data: {
+        email: email,
+        bio: bio,
         userId: upsertUser.id,
-      }))
-    });
+      }
+    })
 
 
-    return res.status(200).json(results.slice(0, 3))
+
+    return res.status(200).json(result)
 
   } else {
     return res.status(400).json({ error: 'Bad request' })
