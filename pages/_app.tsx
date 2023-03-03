@@ -1,4 +1,5 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import PlausibleProvider from "next-plausible";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
 
@@ -27,9 +28,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   });
 
   return (
-    <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <PlausibleProvider domain="readership.cc">
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </PlausibleProvider>
   );
 }
 
