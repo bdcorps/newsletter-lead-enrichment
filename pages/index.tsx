@@ -6,11 +6,11 @@ import {
   chakra,
   Container,
   Heading,
-  HStack,
   Input,
   shouldForwardProp,
   SimpleGrid,
   Spinner,
+  Stack,
   StackDivider,
   Text,
   Textarea,
@@ -249,15 +249,11 @@ const Order = () => {
   const router = useRouter();
   return (
     <Layout>
-      <Box
-        backgroundImage="url('/bg.jpg')"
-        minH="80vh"
-        backgroundPosition="right"
-      >
-        <Container maxW="container.lg" h="80vh">
+      <Box backgroundImage="url('/bg.jpg')" backgroundPosition="right" p={100}>
+        <Container maxW="container.lg" minH={"80vh"}>
           <Center p={4} h="full">
-            <HStack spacing={10}>
-              <VStack spacing={4} w={500} textAlign="center">
+            <Stack spacing={10} direction={["column", "row"]}>
+              <VStack spacing={4} textAlign="center" w="full" flex={1}>
                 <Heading>Learn who is reading your newsletters</Heading>
                 <Text color="gray.600">
                   Enrich your subscriber data and learn more about your readers
@@ -294,10 +290,10 @@ const Order = () => {
                         <Box
                           key={`hero_${i}`}
                           p={3}
-                          backgroundColor="brand.400"
+                          backgroundColor="brand.100"
                           rounded="md"
                           boxShadow="base"
-                          color="white"
+                          color="brand.500"
                         >
                           <Text textAlign="left" fontWeight={500}>
                             {result.email}
@@ -316,7 +312,7 @@ const Order = () => {
                   })}
                 </VStack>
               </VStack>
-            </HStack>
+            </Stack>
           </Center>
         </Container>
       </Box>
