@@ -249,8 +249,13 @@ const Order = () => {
   const router = useRouter();
   return (
     <Layout>
-      <Box backgroundImage="url('/bg.jpg')" backgroundPosition="right" p={100}>
-        <Container maxW="container.lg" minH={"80vh"}>
+      <Box
+        backgroundImage="url('/bg.jpg')"
+        backgroundPosition="right"
+        pt={100}
+        minH={"80vh"}
+      >
+        <Container maxW="container.lg">
           <Center p={4} h="full">
             <Stack spacing={10} direction={["column", "row"]}>
               <VStack spacing={4} textAlign="center" w="full" flex={1}>
