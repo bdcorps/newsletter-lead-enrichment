@@ -52,6 +52,7 @@ const DesktopSidebarContents = ({ name }: any) => {
           {navLinks.map((navLink: any, i: number) => {
             return (
               <Link
+                isExternal
                 href={navLink.link}
                 key={`navlink_${i}`}
                 fontWeight={500}

@@ -3,7 +3,6 @@ import "@fontsource/inter";
 import { Box } from "@chakra-ui/react";
 import { NextSeo } from "next-seo";
 import { FunctionComponent } from "react";
-import Footer from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
 
 interface LayoutProps {
@@ -27,7 +26,7 @@ const Layout: FunctionComponent<LayoutProps> = ({
           <LandingHeader name="Readership" />
         </Box>
         {children}
-        <Footer name="Readership" />
+        {/* <Footer name="Readership" /> */}
       </Box>
     </Box>
   );

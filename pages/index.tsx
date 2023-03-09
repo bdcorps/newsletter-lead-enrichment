@@ -6,6 +6,7 @@ import {
   chakra,
   Container,
   Heading,
+  HStack,
   shouldForwardProp,
   SimpleGrid,
   Spinner,
@@ -75,8 +76,6 @@ interface DemoProps {}
 
 const Demo: FunctionComponent<DemoProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
-
-  const [ownerEmail, setOwnerEmail] = useState("");
   const [emailTokens, setEmailTokens] = useState([]);
   const [results, setResults] = useState<any[]>([]);
 
@@ -85,7 +84,7 @@ const Demo: FunctionComponent<DemoProps> = () => {
   const getSampleResults = async () => {
     axios
       .post("/api/notify", {
-        notes: `${ownerEmail} asked for ${JSON.stringify(emailTokens)}`,
+        notes: `asked for ${JSON.stringify(emailTokens)}`,
       })
       .catch((err) => {
         console.log(err);
@@ -99,111 +98,90 @@ const Demo: FunctionComponent<DemoProps> = () => {
       const res: any = await axios
         .post("/api/search", {
           email,
-          ownerEmail,
         })
         .catch((err) => {
           console.log(err);
         });
 
-      if (index < 3) {
-        setResults((prevResults: any[]) => [...prevResults, res.data]);
-      }
+      setResults((prevResults: any[]) => [...prevResults, res.data]);
     }
 
     setLoading(false);
   };
 
-  if (loading) {
-    return (
-      <Center h="full">
-        <VStack w="full">
-          <Spinner />
-          <Text>{`Processing ${currentlyProcessing}/${emailTokens.length}`}</Text>
-        </VStack>
-      </Center>
-    );
-  }
-
-  if (results && results.length > 0) {
-    return (
-      <VStack align="flex-start" spacing={10}>
-        <Text fontSize="2xl">
-          Showing ({`${results.length} of ${emailTokens.length}`}) results
-        </Text>
-        <VStack
-          divider={<StackDivider borderColor="gray.200" />}
-          spacing={4}
-          align="flex-start"
-        >
-          {results.map((result: any, i: number) => {
-            return (
-              <Box key={`res_${i}`} textAlign="left">
-                <Text fontWeight={500}>{result.email}</Text>
-                <Text color="gray.600">{result.bio}</Text>
-              </Box>
-            );
-          })}
-        </VStack>
-
-        {results.length > 0 && (
-          <VStack
-            w="full"
-            rounded="lg"
-            backgroundColor="gray.100"
-            align="center"
-            spacing={6}
-            p={8}
-            my={8}
-          >
-            <VStack spacing={2}>
-              <Text fontSize="2xl" fontWeight={700} textAlign="center">
-                {`Unlock insights for all ${emailTokens.length} of your subscribers for $20`}
-              </Text>
-              <Text>
-                Results will be emailed directly to your email address as a CSV
-              </Text>
-            </VStack>
-            <Button
-              colorScheme="brand"
-              onClick={() => {
-                window.open("https://buy.stripe.com/fZe7wi3yfgDMfqo9AR");
-              }}
-            >
-              Pay with Stripe
-            </Button>
-          </VStack>
-        )}
-      </VStack>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <Center h="full">
+  //       <VStack w="full">
+  //         <Spinner />
+  //         <Text>{`Processing ${currentlyProcessing}/${emailTokens.length}`}</Text>
+  //       </VStack>
+  //     </Center>
+  //   );
+  // }
 
   return (
     <>
-      <VStack w="full" spacing={10}>
-        <Box w="full">
-          <Textarea
-            h={200}
-            key="email"
-            placeholder="sunny@gmail.com, elon@tesla.com"
-            defaultValue=""
-            onChange={(evt: any) => {
-              setEmailTokens(evt.target.value.split(","));
-            }}
-          />
-        </Box>
+      <HStack w="full">
+        <VStack w="full" spacing={10}>
+          <Box w="full">
+            <Textarea
+              h={200}
+              key="email"
+              placeholder="sunnyashiin@gmail.com, elon@tesla.com"
+              defaultValue=""
+              onChange={(evt: any) => {
+                setEmailTokens(evt.target.value.split(","));
+              }}
+            />
+          </Box>
 
-        <Button
-          onClick={() => {
-            getSampleResults();
-          }}
-          rightIcon={<ArrowForwardIcon />}
-          width="full"
-          colorScheme="brand"
-          isDisabled={emailTokens.length === 0}
-        >
-          Go
-        </Button>
-      </VStack>
+          <Button
+            onClick={() => {
+              setResults([]);
+
+
+              getSampleResults();
+            }}
+            rightIcon={<ArrowForwardIcon />}
+            width="full"
+            colorScheme="brand"
+            isDisabled={emailTokens.length === 0}
+          >
+            Go
+          </Button>
+
+          {loading && (
+            <VStack w="full">
+              <Spinner />
+              <Text>{`Processing ${currentlyProcessing}/${emailTokens.length}`}</Text>
+            </VStack>
+          )}
+
+          {results && results.length > 0 && (
+            <VStack align="flex-start" spacing={4}>
+              <Text fontSize="lg" fontWeight={500}>
+                Showing {`${results.length} of ${emailTokens.length}`} results
+              </Text>
+              <VStack
+                divider={<StackDivider borderColor="gray.200" />}
+                spacing={4}
+                align="flex-start"
+              >
+                {results.map((result: any, i: number) => {
+                  return (
+                    <Box key={`res_${i}`} textAlign="left">
+                      <Text fontWeight={500}>{result.email}</Text>
+                      <Text color="gray.600">{result.bio}</Text>
+                    </Box>
+                  );
+                })}
+              </VStack>
+            </VStack>
+          )}
+        </VStack>
+      </HStack>
+
       {/* <Text>{emailTokens}</Text> */}
       {/* <HStack w="full">
   <Badge onClick={() => {}} cursor="pointer">
@@ -233,85 +211,50 @@ const Order = () => {
   return (
     <Layout>
       <Box
-        backgroundImage="url('/bg.jpg')"
-        backgroundPosition="right"
-        pt={100}
-        minH={"100vh"}
+    
+        py={10}
+        h={"100vh"}
       >
         <Container maxW="container.lg">
           <Center p={4} h="full">
-            <Stack spacing={10} direction={["column", "row"]}>
-              <VStack spacing={4} textAlign="center" w="full" flex={1}>
-                <Heading>Email to Bio</Heading>
-                <Text color="gray.600">
-                  Enter someone&apos;s email and we&apos;ll describe them for
-                  you. Uses public data only, no personal information is
-                  collected. ChatGPT.
-                </Text>
-
-                <Demo />
-              </VStack>
-
-              <VStack w="full" flex={1}>
-                <VStack overflow="scroll" w="full" h="full" spacing={6}>
-                  {heroResults.map((result: any, i: number) => {
-                    return (
-                      <ChakraBox
-                        key={`res_${i}`}
-                        initial={{ x: 0, opacity: 0 }}
-                        animate={{
-                          opacity: [0, 1],
-                        }}
-                        // @ts-ignore no problem in operation, although type error appears.
-                        transition={{
-                          duration: 0.8,
-                        }}
-                      >
-                        <Box
-                          key={`hero_${i}`}
-                          p={3}
-                          backgroundColor="brand.100"
-                          rounded="md"
-                          boxShadow="base"
-                          color="brand.500"
-                        >
-                          <Text textAlign="left" fontWeight={500}>
-                            {result.email}
-                          </Text>
-                          <Text
-                            textAlign="left"
-                            // color="gray.600"
-                            fontSize="sm"
-                            noOfLines={4}
-                          >
-                            {result.bio}
-                          </Text>
-                        </Box>
-                      </ChakraBox>
-                    );
-                  })}
+            <Stack>
+              <VStack spacing={10}>
+                <VStack spacing={4} textAlign="center" w="full" flex={1}>
+                  <Heading>Email to Bio</Heading>
+                  <Text color="gray.600">
+                    Enter someone&apos;s email and we&apos;ll describe them for
+                    you. Uses public data only. Uses ChatGPT API.
+                  </Text>
+                  <Demo />
                 </VStack>
               </VStack>
+
+              {/* {results && results.length > 0 && (
+                <VStack align="flex-start" spacing={10}>
+                  <Text fontSize="lg">
+                    Showing {`${results.length} of ${emailTokens.length}`}{" "}
+                    results
+                  </Text>
+                  <VStack
+                    divider={<StackDivider borderColor="gray.200" />}
+                    spacing={4}
+                    align="flex-start"
+                  >
+                    {results.map((result: any, i: number) => {
+                      return (
+                        <Box key={`res_${i}`} textAlign="left">
+                          <Text fontWeight={500}>{result.email}</Text>
+                          <Text color="gray.600">{result.bio}</Text>
+                        </Box>
+                      );
+                    })}
+                  </VStack>
+                </VStack>
+              )} */}
             </Stack>
           </Center>
         </Container>
       </Box>
-
-      <Container maxW="container.lg" id="try-it-out">
-        {/* <VStack py={10}>
-          <Container maxW="container.lg" w="full" mt={[16, 24]}>
-            <VStack spacing={10}>
-              <Box textAlign="center">
-                <Heading as="h2" fontWeight={500} fontSize="4xl">
-                  Frequently Asked Questions
-                </Heading>
-              </Box>
-
-              <FAQSection items={faqs} />
-            </VStack>
-          </Container>
-        </VStack> */}
-      </Container>
     </Layout>
   );
 };
