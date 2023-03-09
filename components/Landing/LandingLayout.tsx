@@ -17,8 +17,8 @@ const Layout: FunctionComponent<LayoutProps> = ({
   return (
     <Box backgroundColor={backgroundColor} w="full" h="full">
       <NextSeo
-        title="Readership"
-        description="Enrich your newsletter subscriber data and learn more about your readers - where they are from, what they do, what they like, what they are interested in."
+        title="Email to Bio"
+        description="Enter someone's email and we'll describe them for you. Uses public data only. Uses ChatGPT API."
         additionalLinkTags={[{ rel: "icon", href: "/logo.svg" }]}
       />
       <Box w="full" textAlign="center">
