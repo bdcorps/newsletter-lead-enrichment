@@ -6,7 +6,6 @@ import {
   chakra,
   Container,
   Heading,
-  Input,
   shouldForwardProp,
   SimpleGrid,
   Spinner,
@@ -182,9 +181,6 @@ const Demo: FunctionComponent<DemoProps> = () => {
     <>
       <VStack w="full" spacing={10}>
         <Box w="full">
-          <Text textAlign="left" fontWeight={600}>
-            Enter subscriber email addresses (Separated by commas)
-          </Text>
           <Textarea
             h={200}
             key="email"
@@ -196,19 +192,6 @@ const Demo: FunctionComponent<DemoProps> = () => {
           />
         </Box>
 
-        <Box w="full">
-          <Text textAlign="left" fontWeight={600}>
-            Enter your real email
-          </Text>
-
-          <Input
-            placeholder="myemail@gmail.com"
-            type="email"
-            onChange={(evt: any) => {
-              setOwnerEmail(evt.target.value);
-            }}
-          ></Input>
-        </Box>
         <Button
           onClick={() => {
             getSampleResults();
@@ -216,7 +199,7 @@ const Demo: FunctionComponent<DemoProps> = () => {
           rightIcon={<ArrowForwardIcon />}
           width="full"
           colorScheme="brand"
-          isDisabled={emailTokens.length === 0 || !ownerEmail}
+          isDisabled={emailTokens.length === 0}
         >
           Go
         </Button>
@@ -253,28 +236,20 @@ const Order = () => {
         backgroundImage="url('/bg.jpg')"
         backgroundPosition="right"
         pt={100}
-        minH={"80vh"}
+        minH={"100vh"}
       >
         <Container maxW="container.lg">
           <Center p={4} h="full">
             <Stack spacing={10} direction={["column", "row"]}>
               <VStack spacing={4} textAlign="center" w="full" flex={1}>
-                <Heading>Learn who is reading your newsletters</Heading>
+                <Heading>Email to Bio</Heading>
                 <Text color="gray.600">
-                  Enrich your subscriber data and learn more about your readers
-                  - where they are from, what they do, what they like, what they
-                  are interested in.
+                  Enter someone&apos;s email and we&apos;ll describe them for
+                  you. Uses public data only, no personal information is
+                  collected. ChatGPT.
                 </Text>
 
-                <Button
-                  colorScheme="brand"
-                  w="full"
-                  onClick={() => {
-                    router.push("#try-it-out");
-                  }}
-                >
-                  Get started for $20 (100 emails)
-                </Button>
+                <Demo />
               </VStack>
 
               <VStack w="full" flex={1}>
@@ -323,14 +298,7 @@ const Order = () => {
       </Box>
 
       <Container maxW="container.lg" id="try-it-out">
-        <Box p={[4, 10]}>
-          <VStack spacing={6}>
-            <Heading as="h2">Try it out (Free for first 3)</Heading>
-            <Demo />
-          </VStack>
-        </Box>
-
-        <VStack py={10}>
+        {/* <VStack py={10}>
           <Container maxW="container.lg" w="full" mt={[16, 24]}>
             <VStack spacing={10}>
               <Box textAlign="center">
@@ -342,7 +310,7 @@ const Order = () => {
               <FAQSection items={faqs} />
             </VStack>
           </Container>
-        </VStack>
+        </VStack> */}
       </Container>
     </Layout>
   );
